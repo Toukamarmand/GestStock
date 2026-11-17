@@ -1,0 +1,51 @@
+vich_uploader.form_label.delete_confirm: 'Delete?'
+vich_uploader.link.download: Download
+produit.ajout.titre: 'Add product'
+categorie.ajout.titre: 'Add category'
+commande.ajout.titrePage: messages
+commande.ajout.accueil: messages
+commande.ajout.nomPage: messages
+commande.ajout.produit: messages
+commande.ajout.prixAchat: messages
+commande.ajout.stock: messages
+commande.detail.titrePage: messages
+commande.detail.accueil: messages
+commande.detail.nomPage: messages
+commande.detail.donnees: messages
+commande.detail.titre: messages
+commande.detail.code: messages
+commande.detail.date: messages
+commande.detail.montant: messages
+commande.detail.ligneCommande: messages
+commande.detail.buttonSuprimer: messages
+commande.detail.ajoutLigne: messages
+commande.detail.titreModalSupprimerCommande: messages
+commande.detail.texteSupprimerCommande: messages
+commande.detail.buttonSupprimerCommandeModal: messages
+commande.detail.buttonAnnulerCommandeModal: messages
+commande.detail.produit: messages
+commande.detail.prixUnitaire: messages
+commande.detail.quantite: messages
+commande.detail.qte: messages
+commande.detail.dateExp: messages
+commande.detail.action: messages
+commande.detail.titreModalSupprimerproduit: messages
+commande.detail.texteSupprimerproduit: messages
+commande.detail.buttonAnnulerproduitModal: messages
+commande.detail.buttonSupprimerproduitModal: messages
+commande.detail.titreModalediterproduit: messages
+commande.detail.Modalediterproduit: messages
+commande.detail.Modalediterqte: messages
+commande.detail.ModalediterprixUnitaire: messages
+commande.detail.buttonediterproduitModal: messages
+commande.detail.commandeValider: messages
+commande.detail.buttonvaliderCommande: messages
+commande.detail.titreModalajouterproduit: messages
+commande.detail.buttonajoterproduitModal: messages
+Designation: Designation
+commande.ajout.donnees: __commande.ajout.donnees
+commande.ajout.titre: __commande.ajout.titre
+commande.detail.buttonajouterproduitModal: __commande.detail.buttonajouterproduitModal
+categorie:
+  ajout:
+    user: 'messages'

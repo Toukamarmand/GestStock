@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategorieController!{% endblock %}
+
+{% block body %}
+ {#   <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+            background: #F5F5F5;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>#}
+{#
+    <div class="example-wrapper">
+        <h1>Enregistrer une categorie ✅</h1>
+
+        Liste des categories<a href="{{ path('app_categorie') }}">Liste des produits</a>
+
+#}
+
+    <div class="pagetitle">
+        <h1>Ajouter une Utilisateur</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                <li class="breadcrumb-item">Utilisateurs</li>
+                <li class="breadcrumb-item active">Données</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+        <section class="section p-4">
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="card ">
+                        <div class="card-body ">
+                            <h3 class="card-title text-center text-success font-weight-bold gras">{{ 'categorie.ajout.user'|trans }}</h3>
+                            {# Debut du formulaire #}
+                            {{ form_start(form) }}
+                            {% if errors!=[] %}
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        {% for erreur in errors %}
+                                            <li>{{ erreur.message }}</li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                            {%  endif %}
+
+                            {# Corp du formulaire #}
+                            {{ form_widget(form) }}
+                            {# <button type="submit">Enregistrer</button>  #}
+                            <br>
+                            <button type="submit" class="btn btn-light btn-outline-success p-2 form-control"><i class="ri-save-2-fill"></i> Enregistrer</button>
+                            {# Fin du formulaire #}
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {# </div> #}
+{% endblock %}

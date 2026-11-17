@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport ventes</title>
+    <style type="text/css" media="all">
+        {% include ('pdf/css.html.twig') %}
+    </style>
+</head>
+<body>
+<main id="main" class="main">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"> Vente N° {{ vente.code }}</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                           {# <tr>
+                                <th scope="col"colspan="3"></th>
+                                <th scope="col" colspan="4">
+                                    <form action="{{ path('app_vente_liste') }}">
+                                        <input type="date" name="debut"  value="{{ debut|date('Y-m-d') }}"  >
+                                        <input type="date" name="fin" value="{{ fin|date('Y-m-d')}}">
+                                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                                    </form>
+                                </th>
+                            </tr>#}
+                           <tr class="text-center">
+                               <th scope="col" >Produits</th>
+                               <th scope="col" >Prix (Qté)</th>
+                               <th scope="col" >Sous total</th>
+                           </tr>
+                            </thead>
+                            <tbody>
+                            {% for ligne in listevente %}
+                                <tr class="text-center">
+                                    <td>{{ ligne.produit.designation }}</td>
+                                    <td>{{ ligne.prixUnitaire  }} {{ (ligne.qte) }}</td>
+                                    <td>{{ ligne.sousTotal }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>Montant total</td>
+                                <td colspan="2">{{ vente.montant }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+            </div>
+        </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>

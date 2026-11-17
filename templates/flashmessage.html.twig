@@ -1,0 +1,26 @@
+
+         {#   {% for label,messages in app.flashes %}
+                 Notifier les messages sur
+
+                    <div class="alert alert-{{ label }}">
+                        <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                        </ul>
+                    </div>
+            {% endfor %}#}
+
+
+
+
+                  {#  <div class="toast" data-autohide="true">
+                        <div class="toast-body">
+
+                            {{ message }}
+
+                        </div>>
+                    </div>#}
+
+
+

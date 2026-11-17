@@ -1,0 +1,180 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProduitController!{% endblock %}
+
+{% block body %}
+    {#   <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style> #}
+
+        <div class="pagetitle">
+            <h1>Liste des produits</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                    <li class="breadcrumb-item">Produits</li>
+                    <li class="breadcrumb-item active">Données</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Liste des produits</h4>
+
+                            <!-- Table with stripped rows -->
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-3">
+                                        <form action="">
+                                            <input type="text" class="form-control" id="searchInput" placeholder="Rechercher">
+                                        </form>
+                                    </div>
+                            <br>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col"colspan="2"></th>
+
+                                    <form action="{{ path('app_produit') }}">
+                                        <th scope="col"colspan="2">
+                                            <select name="produit" id="" class="form-control">
+                                                    <option value="0" {% if valeur==0 %} selected{% endif %}>Tous</option>
+                                                    <option value="1" {% if valeur==1 %} selected{% endif %}>Stock épuisé</option>
+                                                    <option value="2" {% if valeur==2 %} selected{% endif %}>Stock Alerte</option>
+                                            </select>
+                                        </th>
+                                        <th scope="col" colspan="2">
+                                            <select name="categorie" id="" class="form-control">
+                                                <option value="0">Tous</option>
+                                                {% for cat in categorie %}
+
+                                                    <option value="{{ cat.id }}" {% if idcategorie==cat.id %} selected{% endif %}>{{ cat.libelle }}</option>
+                                                {%endfor %}
+                                            </select>
+                                        </th>
+                                        <th scope="col" colspan="">
+                                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                                        </th>
+                                    </form>
+
+                                </tr>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Designation</th>
+                                    <th scope="col">Categorie</th>
+                                    <th scope="col">Prix d'achat</th>
+                                    <th scope="col">Prix de vente</th>
+                                    <th scope="col">Stock alerte</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% set compteur=1 %}
+                                {% for produit in produits %}
+                                    <tr class="font-weight-bold valeur">
+                                        <td class="gris">{{ produit.reference }}</td>
+                                        <td class="gris"><img class="rounded-circle" src="{{ asset(produitPath)~produit.photo }}" alt="{#{{ produit.designation }}#}" style="width: 40px; height: 40px;"> {{ produit.designation|upper }}</td>
+                                        <td class="gris">{{ produit.categorie.libelle }}</td>
+                                        <td class="gris">{{ produit.prixAchat }}</td>
+                                        <td class="gris">{{ produit.prixVente }}</td>
+
+                                        <td class=" {% if produit.qteAlerte<5 %} text-danger {% endif %}" >{{ produit.qteAlerte }}</td>
+                                        <td class="gris">
+                                          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="{{ produit.id }}"><i class="ri-delete-bin-5-line"> </i></button>
+                                            <a href="{{ path('app_produit_editer',{id: produit.id}) }}"
+                                               class="btn btn-primary"><i class="ri-edit-box-line"></i></a>
+
+                                            <div class="modal fade" id="{{ produit.id  }}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Supprimer un produit</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Voulez vous supprimer le produit {{ produit.designation }}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <a href="{{ path('app_produit_supprimer',{id: produit.id}) }}"
+                                                               class="btn btn-danger"><i class="ri-delete-bin-5-line">Supprimer</i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    {% set compteur=compteur+1 %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    {# <div class="container">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    <ul>
+        <li><a href="{{ path('app_categorie') }}">Liste des categories</a></li>
+        <li><a href="{{ path('app_produit') }}">Liste des produits</a></li>
+        <li><a href="{{ path('app_categorie_ajout') }}">Ajouter une categorie</a></li>
+        <li><a href="{{ path('app_produit_ajout') }}">Ajouter un produit</a></li>
+    </ul> #}
+
+    {#        <table class="table table-bordered">
+            <tr>
+                <td class="gris">ID</td>
+                <td class="gris">Designation</td>
+                <td class="gris">Categorie</td>
+                <td class="gris">Prix d'achat</td>
+                <td class="gris">Prix vente</td>
+                <td class="gris">Stock alerte</td>
+                <td class="gris">Action</td>
+            </tr>
+            {% for produit in produits %}
+                <tr class="gras">
+                    <td class="gris">{{ produit.id }}</td>
+                    <td class="gris">{{ produit.designation|upper }}</td>
+                    <td class="gris">{{ produit.categorie.libelle }}</td>
+                    <td class="gris">{{ produit.prixAchat }}</td>
+                    <td class="gris">{{ produit.prixVente }}</td>
+                    <td class="gris">{{ produit.qteAlerte }}</td>
+                    <td class="gris">
+                        <a href="{{ path('app_produit_supprimer',{id: produit.id}) }}"
+                           class="btn btn-danger">Supprimer</a>
+                        <a href="{{ path('app_produit_editer',{id: produit.id}) }}" class="btn btn-primary">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table> #}
+{% endblock %}
+{% block javascripts %}
+
+    <script>
+        $(document).ready(function (){
+            $('#searchInput').on("keyup",function (){
+                var value=$(this).val().toLowerCase();
+                $(".valeur").filter(function (){
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                })
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LigneVenteController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+
+
+    <div class="pagetitle">
+        <h1>Details des Ventes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                <li class="breadcrumb-item">Ventes</li>
+                <li class="breadcrumb-item active">Détails</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-4">
+               <div class="card">
+                   <div class="card-header">
+                       <h5>Informations Vente</h5>
+                   </div>
+                   <div class="card-body">
+                       <ul>
+                           <span class="gras">CODE</span>
+                           <li class="text-primary gras">{{ vente.code}}</li>
+                       </ul>
+                       <ul>
+                           <span class="gras">DATE</span>
+                           <li class="text-primary gras">{{ vente.date|date('d/m/y H:i') }}</li>
+                       </ul>
+                       <ul>
+                           <span class="gras">Montant</span>
+                           <li class="text-primary gras">{{ vente.montant }}</li>
+                       </ul>
+                   </div>
+               </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"> Lignes de vente</h4>
+
+                        <!-- Table with stripped rows -->
+                        <table class="table table-bordered">
+                            <thead>
+
+                                <tr class="text-center">
+                                    <td colspan="4">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajout"> Ajouter une ligne </button>
+                                    </td>
+                                </tr>
+
+                            {# Modal pour supprimer une vente #}
+                            <div class="modal fade" id="{{  vente.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Supprimer une vente</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Voulez vous supprimer la vente <span class="text-danger">{{  vente.code }}</span> ??</h5>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <a href="{{ path('app_vente_supprimer',{id: vente.id}) }}" class="btn  btn-danger"><i class="ri-delete-bin-5-line"> </i> Supprimer</a>
+                                        </div>
+                                    </div>
+
+
+                                    <tr class="text-center">
+                                <th scope="col">Produit</th>
+                                <th scope="col">Prix Unitaire</th>
+                                    <th scope="col">Qte</th>
+                                    <th scope="col">Action</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for ligneventes in listevente %}
+                                <tr class="text-center">
+                                    <td>{{ ligneventes.produit.designation }}</td>
+                                    <td>{{ ligneventes.prixUnitaire }}</td>
+                                        <td>{{ ligneventes.qte }}</td>
+                                    <td>
+                                        <button data-bs-toggle="modal" data-bs-target="#edit" class="btn  btn-primary"><i class="ri-edit-box-line"></i></button>
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{  ligneventes.id }}"> <i class="ri-delete-bin-6-line"></i> </button>
+                                    </td>
+                                </tr>
+
+                                {# modal pour supprimer une ligne de vente #}
+                                <div class="modal fade" id="{{  ligneventes.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Supprimer une le produit de la vente</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Voulez vous supprimer le produit <span class="text-danger">{{  ligneventes.produit.designation}}</span> ??</h5>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <a href="{{ path('app_vente_supprimerligne',{id: ligneventes.id}) }}" class="btn  btn-danger"><i class="ri-delete-bin-5-line"> </i> Supprimer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {# Editer une ligne de vente #}
+                            <div class="modal fade" id="edit" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Editer le produit de la vente {{ ligneventes.vente.code }}</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <form method="POST" action="{{ path('app_vente_modifierligne',{id: ligneventes.id}) }}">
+
+                                                <div>
+                                                    <input  type="hidden" name="idcom" class="form-control text-center" value="{{ ligneventes.vente.id }}">
+                                                    <input type="hidden" name="produit" class="form-control" readonly value="{{ ligneventes.produit.id }}">
+                                                </div>
+                                                <br>
+                                                <div>
+                                                    <label for="" class="form-label">Produit</label>
+                                                    <input type="text" class="form-control" readonly value="{{ ligneventes.produit.designation }}">
+                                                </div> <br>
+                                                <div>
+                                                    <label for="" class="form-label">Quantite</label>
+                                                    <input type="number" required class="form-control" name="qte" >
+                                                </div> <br>
+                                                <div>
+                                                    <label for="" class="form-label">Prix Unitaire</label>
+                                                    <input type="number" required class="form-control" name="pu" >
+                                                </div> <br>
+                                                <div class="text-center">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="submit" class="btn  btn-primary"><i class="ri-edit-2-fill"> </i> Modifier</button>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                        {# Modal pour ajouter une ligne de vente #}
+                        <div class="modal fade" id="ajout" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Ajouter le produit de la vente {{ vente.code }}</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form method="POST" action="{{ path('app_vente_ajoutligne') }}">
+
+                                            <div>
+                                                <input  type="hidden" name="idcom" class="form-control text-center" value="{{ vente.id }}">
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <label for="" class="form-label">Produit</label>
+                                                <select name="produit" id="" class="form-control" required>
+                                                    {%for select in produitvente %}
+                                                    <option value="{{ select.id }}"> {{ select.designation }} </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> <br>
+                                            <div>
+                                                <label for="" class="form-label">Quantite</label>
+                                                <input type="number" required class="form-control" name="qte" >
+                                            </div> <br>
+                                            <div>
+                                                <label for="" class="form-label">Prix Unitaire</label>
+                                                <input type="number" required class="form-control" name="pu" >
+                                            </div> <br>
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                               <button type="submit" class="btn  btn-success"><i class="bi bi-plus-square-fill"> </i> Ajouter</button>
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

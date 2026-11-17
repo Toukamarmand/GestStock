@@ -1,0 +1,285 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LigneCommandeController!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>
+
+
+    <div class="pagetitle">
+        <h1>{{ 'commande.ajout.titrePage'|trans}} </h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">{{ 'commande.ajout.accueil'|trans}}</a></li>
+                <li class="breadcrumb-item">{{ 'commande.ajout.nomPage'|trans}}</li>
+                <li class="breadcrumb-item active">{{ 'commande.ajout.donnees'|trans}}</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"> {{ 'commande.ajout.titre'|trans}} </h4>
+
+                        <!-- Table with stripped rows -->
+                        <table class="table {# datatable #} table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">{{ 'commande.ajout.produit'|trans}}</th>
+                                <th scope="col">{{ 'commande.ajout.prixAchat'|trans}}</th>
+                                <th scope="col">{{ 'commande.ajout.stock'|trans}}</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for produit in produits %}
+                                <tr>
+                                    <td>{{ produit.designation }}</td>
+                                    <td>{{ produit.prixAchat }}</td>
+                                    <td>{{ produit.qtecommande() }}</td>
+                                    <td>{#<a href="{{ path('app_panierCommande_increment',{id: produit.id}) }}"
+                                           class="btn btn-success">+</a>#}
+                                        <button class="btn btn-success incrementer" data-idProduit="{{ produit.id }}">
+                                            +</button>
+                                        {#<a href="{{ path('app_panierCommande_decrement',{id: produit.id}) }}"
+                                                #}{# {% if error!=[] %}data-bs-toggle="modal" data-bs-target="#erreur"{% endif %} #}{#
+                                           class="btn btn-danger">-</a>#}
+                                        <button class="btn btn-danger decrementer" data-idProduit="{{ produit.id }}">
+                                            -</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            {#         <div class="modal fade" id="erreur" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Une erreur est survenue</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% for erreur in error %}
+                                    {{ erreur }}
+                                {% endfor %}
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> #}
+
+
+            <div class="col-lg-7" id="panierCommande">
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function (){
+            const body=$('body');
+            body.on('click','.supprimerLigneCommande',function (e){
+                e.preventDefault()
+                const idProduit=$(this).attr('data-idProduit');
+                supprimerLigne(idProduit)
+            })
+            body.on('click','.incrementer',function (e){
+                e.preventDefault()
+                const idProduit=$(this).attr('data-idProduit');
+                incrementer(idProduit)
+            })
+            body.on('click','.decrementer',function (e){
+                e.preventDefault()
+                const idProduit=$(this).attr('data-idProduit');
+                decrementer(idProduit)
+            })
+            body.on('change','.modifier',function (e){
+                e.preventDefault()
+                const idProduit=$(this).attr('data-idProduit');
+                const qte=$(this).val();
+                modifierQte(idProduit,qte)
+                console.log(idProduit,qte)
+            })
+            body.on('change','.modifierDate',function (e){
+                e.preventDefault()
+                const idProduit=$(this).attr('data-idProduit');
+                const date=$(this).val();
+                modifierDate(idProduit,date)
+                console.log(idProduit,date)
+            })
+            chargerpage();
+        })
+
+        function chargerpage(){
+            {# On recupere le chemin du controller json #}
+            fetch('{{ path('app_ajax_panierCommande') }}',{
+                {# On passe la methode en Get #}
+                method:'GET',
+                {# On rend le message ou la reponse asynchrone #}
+            }).then(async reponse=>{
+                try {
+                    {# On recupere la reponse  #}
+                    const data=await reponse.json();
+                    {# on passe la reponse a notre element dans le html e.g:Notre card ou notre span etc #}
+                    $('#panierCommande').html(data);
+                }catch (reason){
+                    console.log(reason);
+                }
+            }).catch(function (reason){
+                console.log(reason)
+            })
+        }
+
+        function supprimerLigne(id){
+            {# On cree un formulaire avec le javascript #}
+            let data=new  FormData();
+            data.append("id", id + '');
+            {# On recupere le chemin du controller json #}
+            fetch('{{ path('app_ajax_supprimerLigneCommande') }}',{
+                {# On passe la methode en Get #}
+                method:'POST',
+                /*credentials:'include',*/
+                body:data,
+                {# On rend le message ou la reponse asynchrone #}
+            }).then(async reponse=>{
+                try {
+                    {# On recupere la reponse  #}
+                    const data=await reponse.json();
+                    {# on passe la reponse a notre element dans le html e.g:Notre card ou notre span etc #}
+                    $('#panierCommande').html(data);
+                }catch (reason){
+                    console.log(reason);
+                }
+            }).catch(function (reason){
+                console.log(reason)
+            })
+        }
+
+        function incrementer(id){
+            {# On cree un formulaire avec le javascript #}
+            let data=new  FormData();
+            data.append("id", id + '');
+            {# On recupere le chemin du controller json #}
+            fetch('{{ path('app_ajax_incrementerCommande') }}',{
+                {# On passe la methode en Get #}
+                method:'POST',
+                /*credentials:'include',*/
+                body:data,
+                {# On rend le message ou la reponse asynchrone #}
+            }).then(async reponse=>{
+                try {
+                    {# On recupere la reponse  #}
+                    const data=await reponse.json();
+                    {# on passe la reponse a notre element dans le html e.g:Notre card ou notre span etc #}
+                    $('#panierCommande').html(data);
+                }catch (reason){
+                    console.log(reason);
+                }
+            }).catch(function (reason){
+                console.log(reason)
+            })
+        }
+
+        function decrementer(id){
+            {# On cree un formulaire avec le javascript #}
+            let data=new  FormData();
+            data.append("id", id + '');
+            {# On recupere le chemin du controller json #}
+            fetch('{{ path('app_ajax_decrementerCommande') }}',{
+                {# On passe la methode en Get #}
+                method:'POST',
+                /*credentials:'include',*/
+                body:data,
+                {# On rend le message ou la reponse asynchrone #}
+            }).then(async reponse=>{
+                try {
+                    {# On recupere la reponse  #}
+                    const data=await reponse.json();
+                    {# on passe la reponse a notre element dans le html e.g:Notre card ou notre span etc #}
+                    $('#panierCommande').html(data);
+                }catch (reason){
+                    console.log(reason);
+                }
+            }).catch(function (reason){
+                console.log(reason)
+            })
+        }
+
+        function modifierQte(id,qte){
+            {# On cree un formulaire avec le javascript #}
+            let data=new  FormData();
+            data.append("id", id + '');
+            data.append("qte",qte + '');
+            {# On recupere le chemin du controller json #}
+            fetch('{{ path('app_ajax_modifierqteCommande') }}',{
+                {# On passe la methode en Get #}
+                method:'POST',
+                /*credentials:'include',*/
+                body:data,
+                {# On rend le message ou la reponse asynchrone #}
+            }).then(async reponse=>{
+                try {
+                    {# On recupere la reponse  #}
+                    const data=await reponse.json();
+                    {# on passe la reponse a notre element dans le html e.g:Notre card ou notre span etc #}
+                    $('#panierCommande').html(data);
+                }catch (reason){
+                    console.log(reason);
+                }
+            }).catch(function (reason){
+                console.log(reason)
+            })
+        }
+
+        function modifierDate(id,date){
+            {# On cree un formulaire avec le javascript #}
+            let data=new  FormData();
+            data.append("id", id + '');
+            data.append("date",date);
+            {# On recupere le chemin du controller json #}
+            fetch('{{ path('app_ajax_modifierdateCommande') }}',{
+                {# On passe la methode en Get #}
+                method:'POST',
+                /*credentials:'include',*/
+                body:data,
+                {# On rend le message ou la reponse asynchrone #}
+            }).then(async reponse=>{
+                try {
+                    {# On recupere la reponse  #}
+                    const data=await reponse.json();
+                    {# on passe la reponse a notre element dans le html e.g:Notre card ou notre span etc #}
+                    $('#panierCommande').html(data);
+                }catch (reason){
+                    console.log(reason);
+                }
+            }).catch(function (reason){
+                console.log(reason)
+            })
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CommandeController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+        <div class="pagetitle">
+            <h1>Liste des Commandes</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                    <li class="breadcrumb-item">Commandes</li>
+                    <li class="breadcrumb-item active">Données</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Liste des Commandes </h4>
+
+                            <!-- Table with stripped rows -->
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col"colspan="3"></th>
+                                    <th scope="col" colspan="4">
+                                        <form action="{{ path('app_commande_liste') }}">
+                                            <input type="date" name="debut"  value="{{ dateDebut|date('Y-m-d') }}"  >
+                                            <input type="date" name="fin" value="{{ dateFin|date('Y-m-d')}}">
+                                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                                        </form>
+                                    </th>
+                                </tr>
+                                <tr class="text-center">
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Montant</th>
+                                    <th scope="col">Nbre Produit</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for commande in listecommande %}
+                                <tr class="text-center">
+                                    <td class="gras">{{ commande.code }}</td>
+                                    <td>{{ commande.date|dateformatFr }}</td>
+                                    <td>{{ formaterNombre(commande.montant) }}</td>
+                                    <td class="gras">{{ commande.nombreligne }}</td>
+                                    {% if(commande.statut) %}
+                                    <td class="gras"><span class="badge bg-success">Livrée</span></td>
+                                    {% else %}
+                                        <td class="gras"><span class="badge bg-danger">Non livrée</span></td>
+                                        {% endif %}
+                                    <td><a href="{{ path('app_commande_detail',{id: commande.id}) }}" class="btn  btn-primary">Details</a>
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{  commande.id }}"> <i class="ri-delete-bin-6-line"></i> </button></td>
+                                </tr>
+                                    <div class="modal fade" id="{{  commande.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Supprimer une commande</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h5>Voulez vous supprimer la commande <span class="text-danger">{{  commande.code }}</span> ??</h5>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('app_commande_supprimer',{id: commande.id}) }}" class="btn  btn-danger"><i class="ri-delete-bin-5-line"> </i> Supprimer</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+{% endblock %}

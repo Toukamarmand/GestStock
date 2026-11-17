@@ -1,0 +1,248 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LigneCommandeController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+
+    <div class="pagetitle">
+        <h1>{{ 'commande.detail.titrePage'|trans}} </h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">{{ 'commande.detail.accueil'|trans}}</a></li>
+                <li class="breadcrumb-item">{{ 'commande.detail.nomPage'|trans}}</li>
+                <li class="breadcrumb-item active">{{ 'commande.detail.donnees'|trans}}</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-4">
+               <div class="card">
+                   <div class="card-header">
+                       <h5>{{ 'commande.detail.titre'|trans}}</h5>
+                   </div>
+                   <div class="card-body">
+                       <ul>
+                           <span class="gras">{{ 'commande.detail.code'|trans}}</span>
+                           <li class="text-primary gras">{{ commande.code}}</li>
+                       </ul>
+                       <ul>
+                           <span class="gras">{{ 'commande.detail.date'|trans}}</span>
+                           <li class="text-primary gras">{{ commande.date|date('d/m/y H:i') }}</li>
+                       </ul>
+                       <ul>
+                           <span class="gras">{{ 'commande.detail.montant'|trans}}</span>
+                           <li class="text-primary gras">{{ commande.montant }}</li>
+                       </ul>
+                   </div>
+               </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"> {{ 'commande.detail.ligneCommande'|trans}}</h4>
+
+                        <!-- Table with stripped rows -->
+                        <table class="table table-bordered">
+                            <thead>
+                            {% if commande.statut %}
+                                <tr class="text-center">
+                                    <td colspan="4">
+                                        <button class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#{{ commande.id }}"> {{ 'commande.detail.buttonSuprimer'|trans}}{{ commande.code }}</button>
+                                    </td>
+                                </tr>
+
+                            {% else %}
+                                <tr class="text-center">
+                                    <td colspan="4">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajout">
+                                            {{ 'commande.detail.ajoutLigne'|trans}} </button>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            {# Modal pour supprimer une commande #}
+                            <div class="modal fade" id="{{  commande.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">{{ 'commande.detail.titreModalSupprimerCommande'|trans}}</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>{{ 'commande.detail.texteSupprimerCommande'|trans}} <span class="text-danger">{{  commande.code }}</span> ??</h5>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                {{ 'commande.detail.buttonAnnulerCommandeModal'|trans}}</button>
+                                            <a href="{{ path('app_commande_supprimer',{id: commande.id}) }}" class="btn  btn-danger">
+                                                <i class="ri-delete-bin-5-line"> </i>{{ 'commande.detail.buttonSupprimerCommandeModal'|trans}} </a>
+                                        </div>
+                                    </div>
+
+
+                                    <tr class="text-center">
+                                <th scope="col">{{ 'commande.detail.produit'|trans}}</th>
+                                <th scope="col">{{ 'commande.detail.prixUnitaire'|trans}}</th>
+                                {% if commande.statut %}
+                                    <th scope="col" colspan="2">{{ 'commande.detail.quantite'|trans}}</th>
+                                {% else %}
+                                    <th scope="col">{{ 'commande.detail.qte'|trans}}</th>
+                                    <th scope="col">{{ 'commande.detail.dateExp'|trans}}</th>
+                                    <th scope="col">{{ 'commande.detail.action'|trans}}</th>
+                                {% endif %}
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for lignecommandes in listecommande %}
+                                <tr class="text-center">
+                                    <td>{{ lignecommandes.produit.designation }}</td>
+                                    <td>{{ lignecommandes.prixUnitaire }}</td>
+                                    {% if commande.statut %}
+                                        <td colspan="2">{{ lignecommandes.qte }}</td>
+                                    {% else %}
+                                        <td>{{ lignecommandes.qte }}</td>
+                                        <td>{{ lignecommandes.dateExpiration|date('Y-m-d') }}</td>
+                                    <td>
+                                        <button data-bs-toggle="modal" data-bs-target="#edit" class="btn  btn-primary"><i class="ri-edit-box-line"></i></button>
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{  lignecommandes.id }}"> <i class="ri-delete-bin-6-line"></i> </button>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+
+                                {# modal pour supprimer une ligne de commande #}
+                                <div class="modal fade" id="{{  lignecommandes.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">{{ 'commande.detail.titreModalSupprimerproduit'|trans}}</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>>{{ 'commande.detail.texteSupprimerproduit'|trans}} <span class="text-danger">{{  lignecommandes.produit.designation}}</span> ??</h5>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    {{ 'commande.detail.buttonAnnulerproduitModal'|trans}}</button>
+                                                <a href="{{ path('app_commande_supprimerligne',{id: lignecommandes.id}) }}" class="btn  btn-danger">
+                                                    <i class="ri-delete-bin-5-line"> </i>{{ 'commande.detail.buttonSupprimerproduitModal'|trans}} </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {# Editer une ligne de commande #}
+                            <div class="modal fade" id="edit" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">{{ 'commande.detail.titreModalediterproduit'|trans}} {{ lignecommandes.commande.code }}</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <form method="POST" action="{{ path('app_commande_modifierligne',{id: lignecommandes.id}) }}">
+
+                                                <div>
+                                                    <input  type="hidden" name="idcom" class="form-control text-center" value="{{ lignecommandes.commande.id }}">
+                                                    <input type="hidden" name="produit" class="form-control" readonly value="{{ lignecommandes.produit.id }}">
+                                                </div>
+                                                <br>
+                                                <div>
+                                                    <label for="" class="form-label">{{ 'commande.detail.Modalediterproduit'|trans}}</label>
+                                                    <input type="text" class="form-control" readonly value="{{ lignecommandes.produit.designation }}">
+                                                </div> <br>
+                                                <div>
+                                                    <label for="" class="form-label">{{ 'commande.detail.Modalediterqte'|trans}}</label>
+                                                    <input type="number" required class="form-control" name="qte" >
+                                                </div> <br>
+                                                <div>
+                                                    <label for="" class="form-label">{{ 'commande.detail.ModalediterprixUnitaire'|trans}}</label>
+                                                    <input type="number" required class="form-control" name="pu" >
+                                                </div> <br>
+                                                <div class="text-center">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'commande.detail.buttonAnnulerproduitModal'|trans}}</button>
+                                                    <button type="submit" class="btn  btn-primary"><i class="ri-edit-2-fill"> </i>{{ 'commande.detail.buttonediterproduitModal'|trans}} </button>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                            {% endfor %}
+                                        <tr class="text-center">
+                                            <td colspan="4">
+                                                {% if commande.statut %}
+                                                    <div class="alert alert-success bg-success gras text-bg-dark">{{ 'commande.detail.commandeValider'|trans}}</div>
+                                                {% else %}
+                                                <a href="{{ path('app_commande_valider',{id:commande.id}) }}" class="btn btn-success"> {{ 'commande.detail.buttonvaliderCommande'|trans}} </a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                            </tbody>
+                        </table>
+
+
+                        {# Modal pour ajouter une ligne de commande #}
+                        <div class="modal fade" id="ajout" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">{{ 'commande.detail.titreModalajouterproduit'|trans}} {{ commande.code }}</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form method="POST" action="{{ path('app_commande_ajoutligne') }}">
+
+                                            <div>
+                                                <input  type="hidden" name="idcom" class="form-control text-center" value="{{ commande.id }}">
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <label for="" class="form-label">{{ 'commande.detail.Modalediterproduit'|trans}}</label>
+                                                <select name="produit" id="" class="form-control" required>
+                                                    {%for select in produitcommande %}
+                                                    <option value="{{ select.id }}"> {{ select.designation }} </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> <br>
+                                            <div>
+                                                <label for="" class="form-label">{{ 'commande.detail.Modalediterqte'|trans}}</label>
+                                                <input type="number" required class="form-control" name="qte" >
+                                            </div> <br>
+                                            <div>
+                                                <label for="" class="form-label">{{ 'commande.detail.ModalediterprixUnitaire'|trans}}</label>
+                                                <input type="number" required class="form-control" name="pu" >
+                                            </div> <br>
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'commande.detail.buttonAnnulerproduitModal'|trans}}</button>
+                                               <button type="submit" class="btn  btn-success"><i class="bi bi-plus-square-fill"> </i>{{ 'commande.detail.buttonajouterproduitModal'|trans}} </button>
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

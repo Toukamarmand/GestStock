@@ -1,0 +1,77 @@
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Panier</h4>
+{% set total=0 %}
+<table class="table {# datatable #} table-bordered ">
+    <thead>
+    <tr>
+        <th scope="col">Produit</th>
+        <th scope="col">Quantite</th>
+        <th scope="col">Prix Unitaire</th>
+        <th scope="col">Sous total</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ligne in panierVente %}
+        <tr>
+            <td>{{ ligne.produit.designation }}</td>
+            <td>
+                <form action="">
+                    <input type="number" class="form-control modifier" value="{{ ligne.qte }}" data-idProduit="{{ ligne.produit.id }}">
+                </form>
+            </td>
+            <td>{{ ligne.prixUnitaire }}</td>
+            <td>{{ ligne.sousTotal }}</td>
+            {% set total=total+ligne.sousTotal %}
+            <td>
+                <button class="btn btn-danger supprimerLigne" data-idProduit="{{ ligne.produit.id }}">
+                    <i class="ri-delete-bin-5-line"></i></button>
+            </td>
+        </tr>
+
+
+      {#  <div class="modal fade" id="{{ ligne.produit.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Supprimer le produit du panier</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Voulez vous supprimer le produit <span
+                                    class="text-danger">{{ ligne.produit.designation }}</span>
+                            du pannier ??</h5>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Annuler
+                        </button>
+                        <a href="{{ path('app_panierVente_supprimer',{id: ligne.produit.id}) }}"
+                           class="btn btn-danger"><i class="ri-delete-bin-5-line"> </i>
+                            Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>#}
+    {% endfor %}
+    <tr>
+        <th scope="col" colspan="3" class="text-center">Montant Total</th>
+        <th colspan="2" class="bg-success text-center">
+            {{ total }}
+        </th>
+    </tr>
+    <tr>
+        <td colspan="5" class="text-center">
+            <a href="{{ path('app_panierVente_valider') }}" type="submit"
+               class="btn btn-success"> Valider</a>
+            <a href="{{ path('app_panierVente_delete') }}" type="submit"
+               class="btn btn-danger"> Vider</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+    </div>
+</div>

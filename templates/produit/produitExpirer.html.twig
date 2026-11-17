@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RapportController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper {
+        margin: 1em auto;
+        max-width: 800px;
+        width: 95%;
+        font: 18px/1.5 sans-serif;
+    }
+
+    .example-wrapper code {
+        background: #F5F5F5;
+        padding: 2px 6px;
+    }
+</style>
+
+        <div class="pagetitle">
+            <h1>Produits expirés </h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                    <li class="breadcrumb-item">Produits</li>
+                    <li class="breadcrumb-item active">Produits expirés</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title"> Produits expirés</h4>
+                            <br>
+                            <table class="table table-bordered ">
+                                <thead>
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td class="text-center">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-12">
+                                            <form action="">
+                                                <input type="text" class="form-control" id="searchInput" placeholder="Rechercher">
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <th scope="col" >Désignation</th>
+                                    <th scope="col" >Prix Unitaire</th>
+                                    <th scope="col" >Qté</th>
+                                    <th scope="col" >Catégorie</th>
+                                    <th scope="col" >Sous Total</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ligne in nbreProduitExpirer %}
+                                <tr class="text-center valeur">
+                                    <td>{{ ligne.produit.designation }}</td>
+                                    <td>{{ ligne.prixUnitaire }}</td>
+                                    <td>{{ ligne.qte }}</td>
+                                    <td>{{ ligne.produit.categorie.libelle }}</td>
+                                    <td>{{ ligne.sousTotal }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+{% block javascripts %}
+
+<script>
+    $(document).ready(function (){
+        $('#searchInput').on("keyup",function (){
+            var value=$(this).val().toLowerCase();
+            $(".valeur").filter(function (){
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            })
+        })
+    })
+</script>
+{% endblock %}

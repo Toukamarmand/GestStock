@@ -1,0 +1,191 @@
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link {% if entite != 'accueil' %} collapsed {% endif %}" href="{{ path('app_accueil') }}">
+                <i class="bi bi-grid"></i>
+                <span>Accueil</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+
+        <li class="nav-item">
+            <a class="
+            nav-link {% if entite != 'produit' %} collapsed {% endif %}" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+
+                <i class="ri-article-fill"></i><span>Produits</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+{#            {% set name_controller= app.request.attributes.get('_controller')  %}
+            {% if name_controller starts with '\produit\ajout' %}
+            {% endif%}#}
+            <ul id="components-nav" class="nav-content collapse {% if entite == 'produit' %} show {% endif %}" data-bs-parent="#sidebar-nav">
+                {% if is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a href="{{ path('app_produit_ajout') }}" {% if page=='app_produit_ajout' %}class="active"{% endif %}>
+                        <i class="bi bi-circle"></i><span>Ajouter un produit</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="{{ path('app_produit') }}" {% if page=='app_produit' %}class="active"{% endif %}>
+                        <i class="bi bi-circle"></i><span>Liste des produits</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Breadcrumbs</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End produit Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link {% if entite != 'vente' %} collapsed {% endif %}" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cart-plus"></i><span>Ventes</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="forms-nav" class="nav-content collapse {% if entite =='vente' %} show {% endif %}" data-bs-parent="#sidebar-nav">
+                {% if is_granted('ROLE_VENDEUR') or is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a href="{{ path('app_vente') }}" {% if page=='app_vente' %}class="active"{% endif %}>
+                        <i class="bi bi-circle"></i><span>Ajouter une vente</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="{{ path('app_vente_liste') }}">
+                        <i class="bi bi-circle"></i><span>Liste des ventes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Form Layouts</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End vente Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link {% if entite != 'commande' %} collapsed {% endif %}" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                <i class="ri-shopping-cart-fill"></i><span>Commandes</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="tables-nav" class="nav-content collapse {% if entite == 'commande' %} show {% endif %}" data-bs-parent="#sidebar-nav">
+                {% if (is_granted('ROLE_MAGASINIER') or is_granted('ROLE_ADMIN'))%}
+                <li>
+                    <a href="{{ path('app_commande') }}"
+                       {% if page=='app_commande' %}class="active"{% endif %}>
+                        <i class="bi bi-circle"></i><span>Ajouter une commande</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="{{ path('app_commande_liste') }}" {% if page=='app_commande_liste' %}class="active"{% endif %}>
+                        <i class="bi bi-circle"></i><span>Liste des commandes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Liste des commandes</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End commandes Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link {% if entite != 'categorie' %} collapsed {% endif %}" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-bar-chart"></i><span>Catégorie</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="charts-nav" class="nav-content collapse {% if entite == 'categorie' %} show {% endif %} " data-bs-parent="#sidebar-nav">
+                {% if is_granted('ROLE_ADMIN')  %}
+                <li>
+                    <a href="{{ path('app_categorie_ajout') }}"
+                       {% if page=='app_categorie_ajout' %}class="active"{% endif %}>
+                        <i class="bi bi-circle"></i><span>Ajouter une Catégorie</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="{{ path('app_categorie') }}">
+                        <i class="bi bi-circle"></i><span>Liste des Catégories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Liste des Catégories</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Categorie Nav -->
+        {# Rapport nav #}
+        {% if is_granted('ROLE_ADMIN') %}
+        <li class="nav-item">
+            <a class="nav-link {% if entite != 'rapport' %} collapsed {% endif %}" data-bs-target="#rapport" data-bs-toggle="collapse" href="#">
+                <i class="ri-article-line"></i><span>Rapport</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="rapport" class="nav-content collapse {% if entite == 'rapport' %} show {% endif %}" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ path('app_rapport_vente') }} " class="{% if page == 'app_rapport_vente' %} active {% endif %}">
+                        <i class="bi bi-circle"></i><span>Rapport sur les ventes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_rapport_commande') }} " class="{% if page == 'app_rapport_commande' %} active {% endif %}" >
+                        <i class="bi bi-circle"></i><span>Rapport sur les commandes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Liste des utilisateurs</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End rapport Nav -->
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                <i class="ri-list-check "></i><span>Roles</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Ajouter une role</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Modifier une role</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Liste des roles</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End role Nav -->
+
+        {% if is_granted('ROLE_ADMIN') %}
+        <li class="nav-item">
+            <a class="nav-link {% if entite != 'user' %} collapsed {% endif %}" data-bs-target="#user" data-bs-toggle="collapse" href="#">
+                <i class="ri-user-fill"></i><span>Utilisateur</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="user" class="nav-content collapse {% if entite == 'user' %} show {% endif %}   " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ path('app_user_ajout') }}"  class="{% if page == 'app_user_ajout' %} active {% endif %}">
+                        <i class="bi bi-circle"></i><span>Ajouter un utilisateur</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_user') }}" class="{% if page == 'app_user' %} active {% endif %}">
+                        <i class="bi bi-circle"></i><span>Liste des utilisateurs</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End role Nav -->
+        {% endif %}
+
+
+    </ul>
+
+</aside><!-- End Sidebar-->

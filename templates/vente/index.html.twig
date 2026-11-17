@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello VenteController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+        <div class="pagetitle">
+            <h1>Enregistrer une Ventes</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+                    <li class="breadcrumb-item">Ventes</li>
+                    <li class="breadcrumb-item active">Données</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Liste des Ventes </h4>
+
+                            <!-- Table with stripped rows -->
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col"colspan="2"></th>
+
+                                   {# <form action="{{ path('app_produit') }}">
+                                        <th scope="col"colspan="2">
+                                            <select name="produit" id="" class="form-control">
+                                                <option value="0" {% if valeur==0 %} selected{% endif %}>Tous</option>
+                                                <option value="1" {% if valeur==1 %} selected{% endif %}>Stock épuisé</option>
+                                                <option value="2" {% if valeur==2 %} selected{% endif %}>Stock Alerte</option>
+                                            </select>
+                                        </th>
+                                        <th scope="col" colspan="2">
+                                            <select name="categorie" id="" class="form-control">
+                                                <option value="0">Tous</option>
+                                                {% for cat in categorie %}
+
+                                                    <option value="{{ cat.id }}" {% if idcategorie==cat.id %} selected{% endif %}>{{ cat.libelle }}</option>
+                                                {%endfor %}
+                                            </select>
+                                        </th>
+                                        <th scope="col" colspan="">
+                                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                                        </th>
+                                    </form>
+#}
+                                </tr>
+                                <tr class="text-center">
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Montant</th>
+                                    <th scope="col">Nbre Produit</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for vente in listevente %}
+                                    <tr class="text-center">
+                                        <td class="gras">{{ vente.code }}</td>
+                                        <td>{{ vente.date|dateformatFr }}</td>
+                                        <td>{{ vente.montant }}</td>
+                                        <td class="gras">{{ vente.nombreligne }}</td>
+                                        <td><a href="{{ path('app_vente_detail',{id: vente.id}) }}" class="btn  btn-primary">Details</a>
+                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{  vente.id }}"> <i class="ri-delete-bin-6-line"></i> </button>
+                                            <a href="{{ path('app_facture_print',{id: vente.id}) }}" class="btn  btn-success" target="_blank"><i class="bi bi-printer-fill"></i></a>
+                                        </td>
+                                    </tr>
+                                    <div class="modal fade" id="{{  vente.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Supprimer une vente</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h5>Voulez vous supprimer la vente <span class="text-danger">{{  vente.code }}</span> ??</h5>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('app_vente_supprimer',{id: vente.id}) }}" class="btn  btn-danger"><i class="ri-delete-bin-5-line"> </i> Supprimer</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+{% endblock %}
